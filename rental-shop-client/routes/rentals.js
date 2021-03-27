@@ -15,7 +15,6 @@ router.get('/', async function (req, res, next) {
 });
 
 router.post('/', () => {
-  //axios.post? all?
 })
 
 router.post('/customers', () => {

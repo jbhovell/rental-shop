@@ -1,7 +1,5 @@
 var express = require('express');
 var router = express.Router();
-//TODO 
-//save data in a json file or sqlite
 const data = {
   // [id, rate( per/hour )]
   deviceLevels: [
@@ -47,95 +45,46 @@ router.get('/cost', function (req, res, next) {
 });
 
 router.get('/customers', async function (req, res, next) {
-  //todo
-  //cors forbid?
-  //display in a table?
-  const data = (await axios.get('http://localhost:3001/api')).data
-  res.status(200).json(data);
-});
-
-router.get('/devices', async function (req, res, next) {
-  //todo
-  //cors forbid?
-  //display in a table?
-  const data = (await axios.get('http://localhost:3001/api')).data
-  res.status(200).json(data);
-});
-
-router.get('/deviceslevels', async function (req, res, next) {
-  //todo
-  //cors forbid?
-  //display in a table?
-  const data = (await axios.get('http://localhost:3001/api')).data
-  res.status(200).json(data);
+  res.status(200).json(data.customers);
 });
 
 router.get('/rentals', async function (req, res, next) {
-  //todo
-  //cors forbid?
-  //display in a table?
-  const data = (await axios.get('http://localhost:3001/api')).data
-  res.status(200).json(data);
+  res.status(200).json(data.rentals);
 });
-
 
 router.post('/customers', async function (req, res, next) {
-  //todo
-  //cors forbid?
-  //display in a table?
-  const data = (await axios.get('http://localhost:3001/api')).data
-  res.status(200).json(data);
-});
-
-router.post('/devices', async function (req, res, next) {
-  //todo
-  //cors forbid?
-  //display in a table?
-  const data = (await axios.get('http://localhost:3001/api')).data
-  res.status(200).json(data);
-});
-
-router.post('/deviceslevels', async function (req, res, next) {
-  //todo
-  //cors forbid?
-  //display in a table?
-  const data = (await axios.get('http://localhost:3001/api')).data
-  res.status(200).json(data);
+  res.status(201).json('updated customers');
 });
 
 router.post('/rentals', async function (req, res, next) {
-  //todo
-  //cors forbid?
-  //display in a table?
-  const data = (await axios.get('http://localhost:3001/api')).data
-  res.status(200).json(data);
+  res.status(200).json('updated rentals');
 });
 
 const calculateAmountsOwing = (data, minimumCharge = 0) => {
-  deviceLevels = data.deviceLevels
-  devices = data.devices
-  rentals = data.rentals
-  customers = data.customers
-  cost = {}
+  const deviceLevels = data.deviceLevels
+  const devices = data.devices
+  const rentals = data.rentals
+  const customers = data.customers
+  let cost = {}
   //find the total cost of each customer
-  for (r of rentals) {
-    [id, dev, cus, h] = r
+  for (const r of rentals) {
+    let [id, dev, cus, h] = r
     //find dev level by id
-    devLevel = devices.find(d => d[0] === dev)[1]
+    const devLevel = devices.find(d => d[0] === dev)[1]
     //find rate for device level
-    rate = deviceLevels.find(dl => dl[0] === devLevel)[1]
+    const rate = deviceLevels.find(dl => dl[0] === devLevel)[1]
     sum = rate * h
     sum = sum / cus.length
-    for (c of cus) {
+    for (const c of cus) {
       cost[c] = sum + (cost[c] || 0)
     }
   }
   //apply discount, flat dis and minimal to each customer in cost, round 2 digits
-  disCost = {}
+  let disCost = {}
   Object.keys(cost).forEach(k => {
-    cus = customers.find(c => c[0] == k)
-    total = cost[k] * (100 - cus[2]) / 100 - cus[3]
-    disCost[cus[1]] = +(Math.max(total, minimumCharge)).toFixed(2)
+    const cus = customers.find(c => c[0] == k)
+    const total = cost[k] * (100 - cus[2]) / 100 - cus[3]
+    const disCost[cus[1]] = +(Math.max(total, minimumCharge)).toFixed(2)
   })
   return disCost
 }
