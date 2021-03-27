@@ -44,16 +44,9 @@ router.get('/cost', function (req, res, next) {
   res.send(cost);
 });
 
-router.get('/customers', async function (req, res, next) {
-  res.status(200).json(data.customers);
-});
 
 router.get('/rentals', async function (req, res, next) {
   res.status(200).json(data.rentals);
-});
-
-router.post('/customers', async function (req, res, next) {
-  res.status(201).json('updated customers');
 });
 
 router.post('/rentals', async function (req, res, next) {
@@ -84,7 +77,7 @@ const calculateAmountsOwing = (data, minimumCharge = 0) => {
   Object.keys(cost).forEach(k => {
     const cus = customers.find(c => c[0] == k)
     const total = cost[k] * (100 - cus[2]) / 100 - cus[3]
-    const disCost[cus[1]] = +(Math.max(total, minimumCharge)).toFixed(2)
+    disCost[cus[1]] = +(Math.max(total, minimumCharge)).toFixed(2)
   })
   return disCost
 }
