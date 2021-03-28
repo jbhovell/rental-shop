@@ -4,7 +4,7 @@ const URL = 'http://localhost:3001/users';
 
 // pass params in the command
 // id, customer name, min charge can be commands line argus
-
+//write to csv file
 
 const fetch = async (id, minimumCharge) => {
     console.log(id);
