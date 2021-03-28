@@ -3,7 +3,7 @@ var router = express.Router();
 
 const data = {
   // [id, rate( per/hour )]
-  deviceLevels: [
+  devicelevels: [
     [0, 1.00],
     [1, 1.50],
     [2, 2.00],
@@ -40,9 +40,25 @@ const data = {
   ]
 }
 /* GET users listing. */
+// on servers data to authencated users
 router.get('/', function (req, res, next) {
-  //res.status(200).json(data);
-  res.status(200).send(data);
+  res.status(200).json(data);
 });
+
+router.get('/devicelevels', (req, res, next) => {
+  res.status(200).json(data.devicelevels);
+});
+
+router.get('/devices', function (req, res, next) {
+  res.status(200).json(data.devices);
+});
+
+router.get('/customers', function (req, res, next) {
+  res.status(200).json(data.customers);
+});
+
+router.get('/rentals', function (req, res, next) {
+  res.status(200).json(data.rentals);
+})
 
 module.exports = router;
