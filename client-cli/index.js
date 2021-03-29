@@ -25,7 +25,9 @@ const fetch = async (id, minimumCharge) => {
     }
 };
 
-const calCost = (data, minimumCharge, userId) => {
+const calCost = (data, minimumCharge) => {
+    if (!data )
+        throw new Error('data is null');
     console.log(data);
     const deviceLevels = data.devicelevels
     const devices = data.devices

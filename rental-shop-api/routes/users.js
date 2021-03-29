@@ -41,7 +41,7 @@ const data = {
   ]
 }
 /* GET users listing. */
-// on servers data to authencated users
+// only serve data to authencated users, otherwise reeturns 401 or 403
 router.get('/', function (req, res, next) {
   res.status(200).json(data);
 });

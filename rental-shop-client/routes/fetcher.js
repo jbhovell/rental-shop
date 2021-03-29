@@ -5,8 +5,6 @@ const fs = require('fs');
 
 // cache result in csv, cookie or local storage
 
-//axios post to change customer, rentals
-
 //axios all for multi queries
 
 const fetch = async (id, minimumCharge) => {

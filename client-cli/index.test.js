@@ -17,7 +17,7 @@ describe('test fetch', () => {
         axios.get.mockResolvedValue({ data });
         //below works too, useful for passing method arguments, or mocking more than once based on the arguments
         //axios.get.mockImplementation((url) => {
-          //  return { data }
+        //  return { data }
         //});
     })
     //mock multiple get mockimplementaion for customers, rentals, devices, deviceslevel
@@ -29,13 +29,18 @@ describe('test fetch', () => {
     });
 
     it('should catch the error for negative id', async () => {
-        const res = await fetch(-1, 15);
+        //const res = await fetch(-1, 15);
+        const res = fetch(-1, 15);
+        await expect(res).rejects.toThrowError('id or minimum charge can not be negative');
         expect(axios.get).toHaveBeenCalledTimes(0);
-        await expect(res).toThrow(new Error());
+
     });
     it('should catch the error for axios.get error', async () => {
-        const error = new Error('network error');
-        expect(await fetch(0, 15)).toThrow(error);
+        axios.get.mockImplementation(() => {
+            throw Error('network error');
+        });
+        await expect(fetch(0, 15)).rejects.toThrowError('network error');
+        expect(axios.get).toHaveBeenCalledTimes(1);
     });
 });
 
@@ -46,5 +51,11 @@ describe('test cal cost', () => {
     it('should cal cost ', () => {
         //const cost = calCost(data, 15);
         expect(calCost(data, 15)).toEqual(cost);
+    });
+    it('should throw an exception if data is empty', () => {
+        expect(() => calCost({}, 15)).toThrow();
+    });
+    it('should throw an exception if data is null', () => {
+        expect(() => calCost(null, 15)).toThrow('data is null');
     });
 });
