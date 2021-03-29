@@ -9,22 +9,42 @@ const data = {
     "customers": [[0, "John", 15, 5], [1, "Lea", 25, 20], [2, "Sara", 5, 10], [3, "Bob", 0, 50], [4, "Eric", 10, 10]],
     "rentals": [[0, 1, [1, 0], 10], [1, 2, [2], 24], [2, 3, [3], 5], [3, 4, [2, 3], 48], [4, 1, [1, 0], 10], [5, 2, [1], 24], [6, 3, [3, 2], 5], [7, 4, [2, 3, 0], 48], [8, 0, [4], 10], [9, 0, [4], 15]]
 };
-describe('test fetch', () => {
 
-    axios.get.mockResolvedValue({ data });
+const cost = { John: 23.9, Lea: 23.5, Sara: 96.16, Bob: 21.25, Eric: 15 }
+describe('test fetch', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        axios.get.mockResolvedValue({ data });
+        //below works too, useful for passing method arguments, or mocking more than once based on the arguments
+        //axios.get.mockImplementation((url) => {
+          //  return { data }
+        //});
+    })
+    //mock multiple get mockimplementaion for customers, rentals, devices, deviceslevel
     it('should call axios.get', async () => {
         const res = await fetch(0, 15);
         expect(axios.get).toHaveBeenCalledTimes(1);
-        expect(axios.get).toHaveBeenCalledWith(URL);
-        expect(res).resolves.toEqual({ John: 23.9 });
+        expect(axios.get).toHaveBeenCalledWith(`${URL}/0`);
+        expect(res).toEqual(cost);
     });
 
+    it('should catch the error for negative id', async () => {
+        const res = await fetch(-1, 15);
+        expect(axios.get).toHaveBeenCalledTimes(0);
+        await expect(res).toThrow(new Error());
+    });
+    it('should catch the error for axios.get error', async () => {
+        const error = new Error('network error');
+        expect(await fetch(0, 15)).toThrow(error);
+    });
 });
 
 describe('test cal cost', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    })
     it('should cal cost ', () => {
-        const cost = calCost(data );
-        const expected = { John: 23.9, Lea: 23.5, Sara: 96.16, Bob: 21.25, Eric: 15 };
-        expect(cost).toEqual(expected);
+        //const cost = calCost(data, 15);
+        expect(calCost(data, 15)).toEqual(cost);
     });
 });

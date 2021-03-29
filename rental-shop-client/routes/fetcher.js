@@ -5,6 +5,8 @@ const fs = require('fs');
 
 // cache result in csv, cookie or local storage
 
+//axios post to change customer, rentals
+
 //axios all for multi queries
 
 const fetch = async (id, minimumCharge) => {
@@ -22,6 +24,7 @@ const fetch = async (id, minimumCharge) => {
     catch (e) {
         console.log(e.message);
         throw e;
+        //return new Error();
     }
 };
 
@@ -64,5 +67,14 @@ const writeToCSV = (id, data) => {
 
     fs.writeFileSync('./output.csv', str);
 }
-fetch(process.argv[2], process.argv[3]).then(data => console.log(data));
-module.exports = { fetch, URL, calCost }
+
+const postCustomer = (id, name, pd, fd) => {
+    axios.post(URL, {
+        id,
+        name,
+        fd,
+        pd
+    });
+}
+//fetch(process.argv[2], process.argv[3]).then(data => console.log(data));
+module.exports = { fetch, postCustomer, URL, calCost }

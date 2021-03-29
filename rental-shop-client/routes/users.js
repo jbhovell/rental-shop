@@ -1,14 +1,17 @@
 var express = require('express');
 var router = express.Router();
-var axios = require('axios')
+var fetcher = require('./fetcher')
 
 /* GET users listing. */
 router.get('/', async function (req, res, next) {
-  res.send(await fetch());
+  const data = await fetcher.fetch(req.query.id, 15);
+  res.render('layout', { body: `name, cost <br/>${Object.keys(data)[0]},${Object.values(data)[0]}` });
 });
 
-const fetch = async () => {
-  const resp = await axios.get('http://localhost:3001/users');
-  return resp.data
-}
+
+router.post('/', async function (req, res, next) {
+  await fetcher.postCustomer(req.body.id, req.body.name, req.body.pd, req.body.fd);
+  res.render('layout', { body: 'new user ${req.body.name} was added' });
+});
+
 module.exports = router;

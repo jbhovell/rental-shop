@@ -1,4 +1,5 @@
 var express = require('express');
+const { route } = require('../../rental-shop-client/routes');
 var router = express.Router();
 
 const data = {
@@ -45,6 +46,17 @@ router.get('/', function (req, res, next) {
   res.status(200).json(data);
 });
 
+router.post('/', (req, res) => {
+  data.customers.push(req.body.id, req.body.name, req.body.pd, req.body.fd);
+  res.status(201).json(data);
+})
+
+router.get('/:customerid', function (req, res, next) {
+  let dataForId = { ...data };
+  dataForId.customers = dataForId.customers.filter(x => x[0] == req.params.customerid);
+  dataForId.rentals = dataForId.rentals.filter(x => x[2].includes(+req.params.customerid));
+  res.status(200).json(dataForId);
+});
 router.get('/devicelevels', (req, res, next) => {
   res.status(200).json(data.devicelevels);
 });
