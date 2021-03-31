@@ -3,6 +3,7 @@ const axios = require('axios')
 const URL = 'http://localhost:3001/users';
 const fs = require('fs');
 
+
 // cache result in csv, cookie or local storage
 
 //axios all for multi queries
@@ -17,6 +18,7 @@ const fetch = async (id, minimumCharge) => {
         const resp = await axios.get(`http://localhost:3001/users/${userId}`);
         const cost = calCost(resp.data, +minimumCharge, id);
         writeToCSV(userId, cost);
+        writeToText(cost);
         return cost;
     }
     catch (e) {
@@ -26,7 +28,7 @@ const fetch = async (id, minimumCharge) => {
 };
 
 const calCost = (data, minimumCharge) => {
-    if (!data )
+    if (!data)
         throw new Error('data is null');
     console.log(data);
     const deviceLevels = data.devicelevels
@@ -65,6 +67,11 @@ const writeToCSV = (id, data) => {
     Object.keys(data).forEach(f => str += f + ',' + data[f] + '\n')
 
     fs.writeFileSync('./output.csv', str);
+}
+
+const writeToText = (data) => {
+
+    fs.writeFileSync('./output.txt', JSON.stringify(data));
 }
 fetch(process.argv[2], process.argv[3]).then(data => console.log(data));
 module.exports = { fetch, URL, calCost }
